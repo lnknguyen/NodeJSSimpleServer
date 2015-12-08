@@ -1,0 +1,564 @@
+--
+-- PostgreSQL database dump
+--
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: images; Type: TABLE; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+CREATE TABLE images (
+    id integer NOT NULL,
+    url text,
+    user_id integer,
+    "timestamp" text,
+    description text
+);
+
+
+ALTER TABLE images OWNER TO lnkn;
+
+--
+-- Name: images_id_seq; Type: SEQUENCE; Schema: public; Owner: lnkn
+--
+
+CREATE SEQUENCE images_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE images_id_seq OWNER TO lnkn;
+
+--
+-- Name: images_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: lnkn
+--
+
+ALTER SEQUENCE images_id_seq OWNED BY images.id;
+
+
+--
+-- Name: location; Type: TABLE; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+CREATE TABLE location (
+    lat real,
+    lon real,
+    city text,
+    image_id integer
+);
+
+
+ALTER TABLE location OWNER TO lnkn;
+
+--
+-- Name: locaton_id_seq; Type: SEQUENCE; Schema: public; Owner: lnkn
+--
+
+CREATE SEQUENCE locaton_id_seq
+    START WITH 101
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE locaton_id_seq OWNER TO lnkn;
+
+--
+-- Name: tag; Type: TABLE; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+CREATE TABLE tag (
+    id integer NOT NULL,
+    name text NOT NULL
+);
+
+
+ALTER TABLE tag OWNER TO lnkn;
+
+--
+-- Name: tagma_id_seq; Type: SEQUENCE; Schema: public; Owner: lnkn
+--
+
+CREATE SEQUENCE tagma_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tagma_id_seq OWNER TO lnkn;
+
+--
+-- Name: tagma_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: lnkn
+--
+
+ALTER SEQUENCE tagma_id_seq OWNED BY tag.id;
+
+
+--
+-- Name: tagmap; Type: TABLE; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+CREATE TABLE tagmap (
+    id integer NOT NULL,
+    image_id integer,
+    tag_id integer
+);
+
+
+ALTER TABLE tagmap OWNER TO lnkn;
+
+--
+-- Name: tagmap_id_seq; Type: SEQUENCE; Schema: public; Owner: lnkn
+--
+
+CREATE SEQUENCE tagmap_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tagmap_id_seq OWNER TO lnkn;
+
+--
+-- Name: tagmap_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: lnkn
+--
+
+ALTER SEQUENCE tagmap_id_seq OWNED BY tagmap.id;
+
+
+--
+-- Name: testmap; Type: TABLE; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+CREATE TABLE testmap (
+    id integer NOT NULL,
+    imageid integer,
+    tagid text
+);
+
+
+ALTER TABLE testmap OWNER TO lnkn;
+
+--
+-- Name: testmap_id_seq; Type: SEQUENCE; Schema: public; Owner: lnkn
+--
+
+CREATE SEQUENCE testmap_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE testmap_id_seq OWNER TO lnkn;
+
+--
+-- Name: testmap_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: lnkn
+--
+
+ALTER SEQUENCE testmap_id_seq OWNED BY testmap.id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    username text,
+    password text,
+    lastname text,
+    firstname text,
+    email text
+);
+
+
+ALTER TABLE users OWNER TO lnkn;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: lnkn
+--
+
+CREATE SEQUENCE users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE users_id_seq OWNER TO lnkn;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: lnkn
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: lnkn
+--
+
+ALTER TABLE ONLY images ALTER COLUMN id SET DEFAULT nextval('images_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: lnkn
+--
+
+ALTER TABLE ONLY tag ALTER COLUMN id SET DEFAULT nextval('tagma_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: lnkn
+--
+
+ALTER TABLE ONLY tagmap ALTER COLUMN id SET DEFAULT nextval('tagmap_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: lnkn
+--
+
+ALTER TABLE ONLY testmap ALTER COLUMN id SET DEFAULT nextval('testmap_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: lnkn
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Data for Name: images; Type: TABLE DATA; Schema: public; Owner: lnkn
+--
+
+COPY images (id, url, user_id, "timestamp", description) FROM stdin;
+51	http://res.cloudinary.com/ddakp60er/image/upload/v1449522216/f0ed0d3373a6196f10ea22fc14648fb5c832e663.png	1001	2015-12-07T21:03:36Z	Vvt
+52	http://res.cloudinary.com/ddakp60er/image/upload/v1449522669/cc1e6c58c47cea5c8c63d3e49ef9f13af0d040d9.png	1001	2015-12-07T21:11:09Z	Vvt
+53	http://res.cloudinary.com/ddakp60er/image/upload/v1449522861/ea7359ce205eaf71154519993b9bbee9b15a9e4e.png	1001	2015-12-07T21:14:21Z	Ylooooo
+54	hlhl	1001	24-24-212	\N
+55	hlhl	1001	24-24-212	\N
+56	hlhl	1001	24-24-212	\N
+57	hlhl	1001	24-24-212	\N
+58	hlhl	1001	24-24-212	\N
+59	hlhl	1001	24-24-212	\N
+60	hlhl	1001	24-24-212	\N
+61	hlhl	1001	24-24-212	\N
+62	hlhl	1001	24-24-212	\N
+\.
+
+
+--
+-- Name: images_id_seq; Type: SEQUENCE SET; Schema: public; Owner: lnkn
+--
+
+SELECT pg_catalog.setval('images_id_seq', 62, true);
+
+
+--
+-- Data for Name: location; Type: TABLE DATA; Schema: public; Owner: lnkn
+--
+
+COPY location (lat, lon, city, image_id) FROM stdin;
+60.1707993	24.9375	Helsinki	51
+60.1707993	24.9375	Helsinki	52
+47.4925003	19.0513992	Budapest	53
+60.1707993	24.9375	Helsinki	54
+60.1707993	24.9375	Helsinki	55
+60.1707993	24.9375	Helsinki	56
+60.1707993	24.9375	Helsinki	57
+60.1707993	24.9375	Helsinki	58
+60.1707993	24.9375	Helsinki	59
+60.1707993	24.9375	Helsinki	60
+60.1707993	24.9375	Helsinki	61
+60.1707993	24.9375	Helsinki	62
+\.
+
+
+--
+-- Name: locaton_id_seq; Type: SEQUENCE SET; Schema: public; Owner: lnkn
+--
+
+SELECT pg_catalog.setval('locaton_id_seq', 101, false);
+
+
+--
+-- Data for Name: tag; Type: TABLE DATA; Schema: public; Owner: lnkn
+--
+
+COPY tag (id, name) FROM stdin;
+1	sunny
+2	fun
+3	hilarious
+4	terrible
+5	yolo
+6	hype
+7	horny
+8	sad
+9	dim
+10	long
+11	animal
+\.
+
+
+--
+-- Name: tagma_id_seq; Type: SEQUENCE SET; Schema: public; Owner: lnkn
+--
+
+SELECT pg_catalog.setval('tagma_id_seq', 11, true);
+
+
+--
+-- Data for Name: tagmap; Type: TABLE DATA; Schema: public; Owner: lnkn
+--
+
+COPY tagmap (id, image_id, tag_id) FROM stdin;
+58	51	1
+59	51	2
+60	51	3
+61	51	5
+62	51	6
+63	51	7
+64	51	8
+65	52	1
+66	52	2
+67	52	3
+68	52	5
+69	52	6
+70	52	7
+71	52	8
+72	53	1
+73	53	2
+74	53	4
+75	53	7
+76	54	1
+77	54	2
+78	54	3
+79	54	4
+80	55	1
+81	55	2
+82	55	3
+83	55	4
+84	56	1
+85	56	2
+86	56	3
+87	56	4
+88	57	1
+89	57	2
+90	57	3
+91	57	4
+92	58	1
+93	58	2
+94	58	3
+95	58	4
+96	59	1
+97	59	2
+98	59	3
+99	59	4
+100	60	1
+101	60	2
+102	60	3
+103	60	4
+104	61	1
+105	61	2
+106	61	3
+107	61	4
+108	62	1
+109	62	2
+110	62	3
+111	62	4
+\.
+
+
+--
+-- Name: tagmap_id_seq; Type: SEQUENCE SET; Schema: public; Owner: lnkn
+--
+
+SELECT pg_catalog.setval('tagmap_id_seq', 111, true);
+
+
+--
+-- Data for Name: testmap; Type: TABLE DATA; Schema: public; Owner: lnkn
+--
+
+COPY testmap (id, imageid, tagid) FROM stdin;
+36	32	2
+37	32	3
+38	33	1
+39	33	2
+40	33	3
+41	33	4
+\.
+
+
+--
+-- Name: testmap_id_seq; Type: SEQUENCE SET; Schema: public; Owner: lnkn
+--
+
+SELECT pg_catalog.setval('testmap_id_seq', 41, true);
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: lnkn
+--
+
+COPY users (id, username, password, lastname, firstname, email) FROM stdin;
+1001	admin	d033e22ae348aeb5660fc2140aec35850c4da997	nguyen	lnk	haha@gm.cm
+1002	root	dc76e9f0c0006e8f919e0c515c66dbba3982f785	tao la	vua	hahaha@gm.cm
+\.
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: lnkn
+--
+
+SELECT pg_catalog.setval('users_id_seq', 1002, true);
+
+
+--
+-- Name: images_pkey; Type: CONSTRAINT; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+ALTER TABLE ONLY images
+    ADD CONSTRAINT images_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tagma_pkey; Type: CONSTRAINT; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+ALTER TABLE ONLY tag
+    ADD CONSTRAINT tagma_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tagmap_pkey; Type: CONSTRAINT; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+ALTER TABLE ONLY tagmap
+    ADD CONSTRAINT tagmap_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: testmap_pkey; Type: CONSTRAINT; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+ALTER TABLE ONLY testmap
+    ADD CONSTRAINT testmap_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: unique_index; Type: CONSTRAINT; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT unique_index UNIQUE (email, username);
+
+
+--
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users_username_key; Type: CONSTRAINT; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_username_key UNIQUE (username);
+
+
+--
+-- Name: name_index; Type: INDEX; Schema: public; Owner: lnkn; Tablespace: 
+--
+
+CREATE INDEX name_index ON users USING btree (username);
+
+
+--
+-- Name: fk_user; Type: FK CONSTRAINT; Schema: public; Owner: lnkn
+--
+
+ALTER TABLE ONLY images
+    ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: location_image_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: lnkn
+--
+
+ALTER TABLE ONLY location
+    ADD CONSTRAINT location_image_id_fkey FOREIGN KEY (image_id) REFERENCES images(id) ON DELETE CASCADE;
+
+
+--
+-- Name: tagmap_image_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: lnkn
+--
+
+ALTER TABLE ONLY tagmap
+    ADD CONSTRAINT tagmap_image_id_fkey FOREIGN KEY (image_id) REFERENCES images(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: tagmap_tag_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: lnkn
+--
+
+ALTER TABLE ONLY tagmap
+    ADD CONSTRAINT tagmap_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES tag(id);
+
+
+--
+-- Name: public; Type: ACL; Schema: -; Owner: lnkn
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM lnkn;
+GRANT ALL ON SCHEMA public TO lnkn;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
