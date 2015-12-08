@@ -219,7 +219,7 @@ router.get(baseUrl + "/tag/:img_id", function(req,res){
 router.get(baseUrl + "/image/search/user/:user_name", function(req,res){
     var data = req.params.user_name
     var result = [];
-    var searchString = "where exists(select 1 from users u where u.username=($1) AND u.user_id=i.user_id)"
+    var searchString = "where exists(select 1 from users u where u.username=($1) AND u.id=i.user_id)"
     var sql = baseSearchString + searchString;
     //var sql = getImageSql + ' where exists(select 1 from users where (users.username=($1) AND users.user_id=images.user_id))';
     
