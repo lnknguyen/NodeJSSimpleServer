@@ -133,7 +133,7 @@ router.post(baseUrl + "/login", function(req,res){
 });
 
 //get all tags
-router.get(baseUrl + "/tag", function(req,res){
+router.get(baseUrl + "/search/tag", function(req,res){
     var result = [];
     
     var sql = "select name from tag"
@@ -290,6 +290,29 @@ router.get(baseUrl + "/search/city", function(req,res){
 
 });
 
+//get all username
+router.get(baseUrl + "/search/user", function(req,res){
+     //var data = req.params.city_name
+    var result = [];
+    
+    var sql = "select username from users"
+    pg.connect(hardString, function(err,client,done){
+                if(err){
+                        done();
+                        console.log(err);
+                        return res.status(500).json({success: false, data:err});
+                }
+                var query = client.query(sql);
+                query.on('row', function(row){
+                        result.push(row);
+                });
+                query.on('end',function(){
+                        done();
+                        return res.json(result);
+                });
+        });
+
+});
 //by tag
 router.get(baseUrl + "/image/search/tag/:tag_name", function(req,res){
      var data = req.params.tag_name
