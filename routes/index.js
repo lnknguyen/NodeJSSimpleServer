@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var baseUrl = "/api/v1";
 var pg = require('pg');
-var hardString = "postgres://localhost:5432/collection";
+var hardString = process.env.DATABASE_URL || "postgres://localhost:5432/collection";
 //var hardString = 'postgres://fiaebvkrtkmxta:l4UtJuxt1VZXWz7RfQPxKYjT21@ec2-54-197-247-170.compute-1.amazonaws.com:5432/db98o9j2bnjjmf?ssl=true'
 var baseSearchString = "select * from images i inner join location l on (i.id = l.image_id)";
 
