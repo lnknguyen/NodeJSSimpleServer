@@ -38,8 +38,8 @@ router.get(baseUrl + "/image", function(req,res){
         });
 });
 
-//fix later 
-router.post(baseUrl + "/image", function(req,res){
+ 
+router.post(baseUrl + "/create/image", function(req,res){
         var result = [];
         var sql = "WITH t1 AS ("
                 +"INSERT INTO images(url,timestamp,description,user_id) values($1,$2,$3,$4) "
@@ -82,21 +82,52 @@ router.post(baseUrl + "/image", function(req,res){
         });
 });
 
+router.post(baseUrl + "/create/user", function(req,res){
+        var result = [];
+        var sql = "INSERT INTO users(email,password,username) VALUES($1,$2,$3)";
+        
+        var data = {email: req.body.email,
+                password: req.body.password,
+                username: req.body.username
+        };
+
+        
+        pg.connect(hardString,function(err,client,done){
+                if(err){
+                        done();
+                        console.log(error);
+                        return res.status(500).json({success: false, data: err});
+                }
+             
+                var query = client.query(sql,[data.email,data.password,data.username]);
+                query.on('row',function(row){
+                        result.push(row);   
+                });
+
+                query.on('end',function(){
+                        done();
+                        return res.json(result);
+                });
+        });
+});
+
+
 
 router.post(baseUrl + "/user/find", function(req,res){
         var result = [];
-        var sql = "SELECT EXISTS(SELECT 1 FROM users WHERE username=LOWER($1) AND password=$2)";
+        var sql = "SELECT EXISTS(SELECT 1 FROM users WHERE email ilike $1 AND password=$2)";
         var data = {
-            username: req.body.username,
+            email: req.body.email,
            password: req.body.password 
         };
+        
         pg.connect(hardString, function(err,client,done){
                 if(err){
                         done();
                         console.log(err);
                         return res.status(500).json({success: false, data:err});
                 }
-                var query = client.query(sql,[data.username,data.password]);
+                var query = client.query(sql,[data.email,data.password]);
                 query.on('row', function(row){
                         result.push(row);
                 });
@@ -108,10 +139,10 @@ router.post(baseUrl + "/user/find", function(req,res){
 });
 
 router.post(baseUrl + "/login", function(req,res){
-        var sql = "SELECT id,username,email,firstname,lastname FROM users WHERE username=LOWER($1) AND password=($2)";
+        var sql = "SELECT id,username,email,firstname,lastname FROM users WHERE email ilike $1 AND password=($2)";
         var result = [];
         var data = {
-            username: req.body.username,
+            email: req.body.email,
            password: req.body.password 
         };
         pg.connect(hardString, function(err,client,done){
@@ -120,7 +151,7 @@ router.post(baseUrl + "/login", function(req,res){
                         console.log(err);
                         return res.status(500).json({success: false, data:err});
                 }
-                var query = client.query(sql,[data.username,data.password]);
+                var query = client.query(sql,[data.email,data.password]);
                 query.on('row', function(row){
                         result.push(row);
                 });
@@ -313,12 +344,37 @@ router.get(baseUrl + "/search/user", function(req,res){
         });
 
 });
+
 //by tag
 router.get(baseUrl + "/image/search/tag/:tag_name", function(req,res){
      var data = req.params.tag_name
     var result = [];
     var searchString = ", tagmap tm, tag t where tm.tag_id=t.id and tm.image_id=i.id and t.name=($1)"
     var sql = baseSearchString + searchString;
+    pg.connect(hardString, function(err,client,done){
+                if(err){
+                        done();
+                        console.log(err);
+                        return res.status(500).json({success: false, data:err});
+                }
+                var query = client.query(sql,[data]);
+                query.on('row', function(row){
+                        result.push(row);
+                });
+                query.on('end',function(){
+                        done();
+                        return res.json(result);
+                });
+        });
+
+});
+
+//get tags for image
+router.get(baseUrl + "/tag/search/:image_id", function(req,res){
+     //var data = req.params.city_name
+    var result = [];
+    var data = req.params.image_id
+    var sql = "select t.name from tag t, tagmap tm where tm.image_id=($1) and tm.tag_id=t.id"
     pg.connect(hardString, function(err,client,done){
                 if(err){
                         done();
